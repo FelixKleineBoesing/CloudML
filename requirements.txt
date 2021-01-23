@@ -1,0 +1,6 @@
+tensorflow
+pandas
+numpy
+pyarrow
+scikit-learn
+category_encoders
