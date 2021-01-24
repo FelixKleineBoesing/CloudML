@@ -3,7 +3,7 @@ import tensorflow as tf
 import os
 
 from src.data_processing import clean_data, write_data_to_directory, target_encode
-from src.helpers import create_dir_if_not_exist
+from src.helpers import create_dir_if_not_exist, sampling
 from src.modelling import get_model, compile_model, get_adam_optimizer, cross_validate
 
 DATA_PATH = Path("..", "data", "travel insurance.csv")
@@ -23,6 +23,7 @@ def get_trained_model(input_shape, learning_rate):
 def process_data(train_data, train_label, test_data, test_label):
     encoder, train_data = target_encode(train_data, train_label)
     _, test_data = target_encode(test_data, test_label, encoder)
+    train_data, train_label = sampling(train_data, train_label, "up")
     return train_data, train_label, test_data, test_label
 
 
@@ -34,7 +35,10 @@ def main():
     data.drop(["label"], axis=1, inplace=True)
 
     train_model_func = get_trained_model((data.shape[1], ), learning_rate=0.001)
-    cross_validate(train_model_func=train_model_func, data=data, label=label, data_processing_func=process_data)
+    metrics = cross_validate(train_model_func=train_model_func,
+                             data=data, label=label,
+                             data_processing_func=process_data)
+    print(metrics)
 
 
 if __name__ == "__main__":
