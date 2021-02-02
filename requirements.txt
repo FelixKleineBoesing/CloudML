@@ -4,3 +4,5 @@ numpy
 pyarrow
 scikit-learn
 category_encoders
+azureml-core
+dotenv-python
