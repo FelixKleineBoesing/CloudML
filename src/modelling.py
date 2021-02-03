@@ -51,3 +51,16 @@ def cross_validate(train_model_func, data, label, folds: int = 5, data_processin
 
         metrics_per_fold.append(scores)
     return pd.DataFrame(metrics_per_fold)
+
+
+def get_trained_model(input_shape, learning_rate, callback = None):
+    def wrapper(data, label):
+        model = get_model(input_shape)
+        optimizer = get_adam_optimizer(learning_rate=learning_rate)
+        model = compile_model(model=model, optimizer=optimizer, metrics=["accuracy", tf.metrics.Recall()])
+        if callback is None:
+            model.fit(data, label, batch_size=128, epochs=50, verbose=True, callback=callback)
+        else:
+            model.fit(data, label, batch_size=128, epochs=50, verbose=True)
+        return model
+    return wrapper

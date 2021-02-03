@@ -1,7 +1,7 @@
 import pandas as pd
 from category_encoders.target_encoder import TargetEncoder
 
-from src.helpers import create_dir_if_not_exist
+from src.helpers import create_dir_if_not_exist, sampling
 
 
 def clean_data(file_path):
@@ -39,3 +39,10 @@ def target_encode(data, label, encoder=None):
         return encoder, data
     else:
         return encoder, encoder.transform(data, label)
+
+
+def process_data(train_data, train_label, test_data, test_label):
+    encoder, train_data = target_encode(train_data, train_label)
+    _, test_data = target_encode(test_data, test_label, encoder)
+    train_data, train_label = sampling(train_data, train_label, "up")
+    return train_data, train_label, test_data, test_label

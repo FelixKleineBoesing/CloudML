@@ -5,4 +5,5 @@ pyarrow
 scikit-learn
 category_encoders
 azureml-core
+azureml.dataprep
 dotenv-python
